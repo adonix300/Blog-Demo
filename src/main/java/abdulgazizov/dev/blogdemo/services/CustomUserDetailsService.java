@@ -1,8 +1,8 @@
-package abdulgazizov.dev.blogdemo.secutiry.services;
+package abdulgazizov.dev.blogdemo.services;
 
 import abdulgazizov.dev.blogdemo.entities.UserEntity;
 import abdulgazizov.dev.blogdemo.exceptions.BadRequestException;
-import abdulgazizov.dev.blogdemo.secutiry.models.CustomUserDetails;
+import abdulgazizov.dev.blogdemo.models.CustomUserDetails;
 import abdulgazizov.dev.blogdemo.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

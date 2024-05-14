@@ -1,4 +1,4 @@
-package abdulgazizov.dev.blogdemo.secutiry.models;
+package abdulgazizov.dev.blogdemo.models;
 
 
 import abdulgazizov.dev.blogdemo.entities.UserEntity;

@@ -1,4 +1,4 @@
-package abdulgazizov.dev.blogdemo.secutiry.services;
+package abdulgazizov.dev.blogdemo.secutiry;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
