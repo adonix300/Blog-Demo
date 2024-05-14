@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +16,4 @@ public class UserDto {
     private Long id;
     private String username;
     private Role role;
-    private List<PostDto> posts;
-    private List<CommentDto> comments;
 }

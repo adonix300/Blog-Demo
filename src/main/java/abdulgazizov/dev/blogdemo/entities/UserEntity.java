@@ -4,9 +4,6 @@ import abdulgazizov.dev.blogdemo.models.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @Setter
 @Builder
@@ -15,7 +12,6 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 public class UserEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,10 +21,4 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @OneToMany(mappedBy = "user")
-    private List<PostEntity> posts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<CommentEntity> comments = new ArrayList<>();
 }

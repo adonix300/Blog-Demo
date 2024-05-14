@@ -1,9 +1,12 @@
 package abdulgazizov.dev.blogdemo.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.Instant;
 
 @Data
 @Builder
@@ -12,6 +15,8 @@ import lombok.NoArgsConstructor;
 public class CommentDto {
     private Long id;
     private String content;
-    private PostDto post;
+    @Builder.Default
+    @JsonProperty("created_at")
+    private Instant createdAt = Instant.now();
     private UserDto user;
 }

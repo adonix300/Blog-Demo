@@ -1,6 +1,5 @@
 package abdulgazizov.dev.blogdemo.services.impl;
 
-import abdulgazizov.dev.blogdemo.dto.UserDto;
 import abdulgazizov.dev.blogdemo.entities.UserEntity;
 import abdulgazizov.dev.blogdemo.exceptions.BadRequestException;
 import abdulgazizov.dev.blogdemo.mappers.UserMapper;
@@ -19,7 +18,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public UserDto create(String username, String password) {
+    public UserEntity create(String username, String password) {
         if (userRepository.existsByUsername(username)) {
             throw new BadRequestException("User with username: " + username + " already exists");
         }
@@ -30,30 +29,23 @@ public class UserServiceImpl implements UserService {
                 .role(Role.ROLE_USER)
                 .build();
 
-        final UserEntity savedUser = userRepository.saveAndFlush(entity);
-
-        return userMapper.toDto(savedUser);
+        return userRepository.saveAndFlush(entity);
     }
 
-    public UserDto getByUsername(String username) {
-        final UserEntity entity = userRepository
+    public UserEntity getByUsername(String username) {
+        return userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new BadRequestException("User with username: " + username + " does not exist"));
-
-        return userMapper.toDto(entity);
     }
 
-    public UserDto getById(Long id) {
-        final UserEntity entity = userRepository
+    public UserEntity getById(Long id) {
+        return userRepository
                 .findById(id)
                 .orElseThrow(() -> new BadRequestException("User with id: " + id + " does not exist"));
-
-        return userMapper.toDto(entity);
     }
 
-    public UserDto getCurrent() {
-        var username = SecurityContextHolder.getContext().getAuthentication().getName();
+    public UserEntity getCurrent() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return getByUsername(username);
     }
-
 }

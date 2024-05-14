@@ -3,6 +3,7 @@ package abdulgazizov.dev.blogdemo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +22,14 @@ public class PostEntity {
     private String title;
     private String content;
 
+    @Builder.Default
+    private Instant createdAt = Instant.now();
+
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @OneToMany(mappedBy = "post")
+    @Builder.Default
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CommentEntity> comments = new ArrayList<>();
 }

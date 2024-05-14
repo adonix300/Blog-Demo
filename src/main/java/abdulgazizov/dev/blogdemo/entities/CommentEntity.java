@@ -3,6 +3,8 @@ package abdulgazizov.dev.blogdemo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Instant;
+
 @Getter
 @Setter
 @Builder
@@ -18,11 +20,14 @@ public class CommentEntity {
 
     private String content;
 
+    @Builder.Default
+    private Instant createdAt = Instant.now();
+
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", nullable = false)
     private PostEntity post;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 }

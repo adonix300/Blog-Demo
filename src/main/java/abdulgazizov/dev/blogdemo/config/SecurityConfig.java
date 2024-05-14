@@ -1,6 +1,6 @@
 package abdulgazizov.dev.blogdemo.config;
 
-import abdulgazizov.dev.blogdemo.secutiry.JwtFilter;
+import abdulgazizov.dev.blogdemo.secutiry.services.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

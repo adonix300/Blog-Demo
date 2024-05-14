@@ -1,10 +1,13 @@
 package abdulgazizov.dev.blogdemo.services;
 
-import abdulgazizov.dev.blogdemo.dto.UserDto;
+import abdulgazizov.dev.blogdemo.entities.UserEntity;
 
 public interface UserService {
-    UserDto create(String username, String password);
-    UserDto getByUsername(String username);
-    UserDto getById(Long id);
-    UserDto getCurrent();
+    UserEntity create(String username, String password);
+
+    UserEntity getByUsername(String username);
+
+    UserEntity getById(Long id);
+
+    UserEntity getCurrent();
 }
