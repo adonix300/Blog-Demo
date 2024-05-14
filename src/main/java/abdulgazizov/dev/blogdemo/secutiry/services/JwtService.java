@@ -1,6 +1,6 @@
-package abdulgazizov.dev.blogdemo.services.impl;
+package abdulgazizov.dev.blogdemo.secutiry.services;
 
-import abdulgazizov.dev.blogdemo.models.CustomUserDetails;
+import abdulgazizov.dev.blogdemo.secutiry.models.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
