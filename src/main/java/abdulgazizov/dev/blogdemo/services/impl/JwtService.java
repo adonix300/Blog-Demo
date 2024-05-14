@@ -1,4 +1,4 @@
-package abdulgazizov.dev.blogdemo.services;
+package abdulgazizov.dev.blogdemo.services.impl;
 
 import abdulgazizov.dev.blogdemo.models.CustomUserDetails;
 import io.jsonwebtoken.Claims;
