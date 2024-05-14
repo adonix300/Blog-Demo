@@ -3,8 +3,6 @@ package abdulgazizov.dev.blogdemo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Getter
 @Setter
 @Builder
