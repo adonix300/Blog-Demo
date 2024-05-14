@@ -2,8 +2,8 @@ package abdulgazizov.dev.blogdemo.services.impl;
 
 import abdulgazizov.dev.blogdemo.dto.AuthRequest;
 import abdulgazizov.dev.blogdemo.dto.AuthResponse;
-import abdulgazizov.dev.blogdemo.secutiry.services.CustomUserDetailsService;
-import abdulgazizov.dev.blogdemo.secutiry.services.JwtService;
+import abdulgazizov.dev.blogdemo.services.CustomUserDetailsService;
+import abdulgazizov.dev.blogdemo.secutiry.JwtService;
 import abdulgazizov.dev.blogdemo.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
