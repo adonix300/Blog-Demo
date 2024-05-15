@@ -2,6 +2,7 @@ package abdulgazizov.dev.blogdemo.services.impl;
 
 import abdulgazizov.dev.blogdemo.models.dto.AuthRequest;
 import abdulgazizov.dev.blogdemo.models.dto.AuthResponse;
+import abdulgazizov.dev.blogdemo.repositories.UserRepository;
 import abdulgazizov.dev.blogdemo.services.CustomUserDetailsService;
 import abdulgazizov.dev.blogdemo.secutiry.JwtService;
 import abdulgazizov.dev.blogdemo.services.UserService;
