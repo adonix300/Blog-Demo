@@ -1,6 +1,6 @@
-package abdulgazizov.dev.blogdemo.entities;
+package abdulgazizov.dev.blogdemo.models.entities;
 
-import abdulgazizov.dev.blogdemo.models.Role;
+import abdulgazizov.dev.blogdemo.models.user.Role;
 import jakarta.persistence.*;
 import lombok.*;
 

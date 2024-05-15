@@ -1,7 +1,7 @@
 package abdulgazizov.dev.blogdemo.mappers;
 
-import abdulgazizov.dev.blogdemo.dto.PostDto;
-import abdulgazizov.dev.blogdemo.entities.PostEntity;
+import abdulgazizov.dev.blogdemo.models.dto.PostDto;
+import abdulgazizov.dev.blogdemo.models.entities.PostEntity;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 

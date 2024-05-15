@@ -1,6 +1,6 @@
-package abdulgazizov.dev.blogdemo.dto;
+package abdulgazizov.dev.blogdemo.models.dto;
 
-import abdulgazizov.dev.blogdemo.models.Role;
+import abdulgazizov.dev.blogdemo.models.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

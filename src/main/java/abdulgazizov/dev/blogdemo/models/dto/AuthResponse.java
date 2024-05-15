@@ -1,4 +1,4 @@
-package abdulgazizov.dev.blogdemo.dto;
+package abdulgazizov.dev.blogdemo.models.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

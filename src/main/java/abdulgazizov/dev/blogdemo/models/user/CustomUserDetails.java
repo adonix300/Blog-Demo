@@ -1,7 +1,7 @@
-package abdulgazizov.dev.blogdemo.models;
+package abdulgazizov.dev.blogdemo.models.user;
 
 
-import abdulgazizov.dev.blogdemo.entities.UserEntity;
+import abdulgazizov.dev.blogdemo.models.entities.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

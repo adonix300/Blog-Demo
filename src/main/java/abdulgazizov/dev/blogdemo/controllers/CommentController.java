@@ -1,6 +1,6 @@
 package abdulgazizov.dev.blogdemo.controllers;
 
-import abdulgazizov.dev.blogdemo.dto.CommentDto;
+import abdulgazizov.dev.blogdemo.models.dto.CommentDto;
 import abdulgazizov.dev.blogdemo.mappers.CommentMapper;
 import abdulgazizov.dev.blogdemo.services.CommentService;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package abdulgazizov.dev.blogdemo.services;
 
-import abdulgazizov.dev.blogdemo.entities.UserEntity;
+import abdulgazizov.dev.blogdemo.models.entities.UserEntity;
 
 public interface UserService {
     UserEntity create(String username, String password);

@@ -1,6 +1,6 @@
 package abdulgazizov.dev.blogdemo.controllers;
 
-import abdulgazizov.dev.blogdemo.dto.PostDto;
+import abdulgazizov.dev.blogdemo.models.dto.PostDto;
 import abdulgazizov.dev.blogdemo.mappers.PostMapper;
 import abdulgazizov.dev.blogdemo.services.impl.PostServiceImpl;
 import lombok.RequiredArgsConstructor;

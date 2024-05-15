@@ -1,9 +1,11 @@
-package abdulgazizov.dev.blogdemo.entities;
+package abdulgazizov.dev.blogdemo.models.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -11,23 +13,23 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "comments")
-public class CommentEntity {
-
+@Table(name = "posts")
+public class PostEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String title;
     private String content;
 
     @Builder.Default
     private Instant createdAt = Instant.now();
 
     @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
-    private PostEntity post;
-
-    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CommentEntity> comments = new ArrayList<>();
 }

@@ -1,7 +1,7 @@
 package abdulgazizov.dev.blogdemo.mappers;
 
-import abdulgazizov.dev.blogdemo.dto.UserDto;
-import abdulgazizov.dev.blogdemo.entities.UserEntity;
+import abdulgazizov.dev.blogdemo.models.dto.UserDto;
+import abdulgazizov.dev.blogdemo.models.entities.UserEntity;
 import org.mapstruct.factory.Mappers;
 
 @org.mapstruct.Mapper(componentModel = "spring")

@@ -1,6 +1,6 @@
 package abdulgazizov.dev.blogdemo.repositories;
 
-import abdulgazizov.dev.blogdemo.entities.UserEntity;
+import abdulgazizov.dev.blogdemo.models.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

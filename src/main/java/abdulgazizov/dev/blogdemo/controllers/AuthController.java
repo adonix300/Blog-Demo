@@ -1,7 +1,7 @@
 package abdulgazizov.dev.blogdemo.controllers;
 
-import abdulgazizov.dev.blogdemo.dto.AuthRequest;
-import abdulgazizov.dev.blogdemo.dto.AuthResponse;
+import abdulgazizov.dev.blogdemo.models.dto.AuthRequest;
+import abdulgazizov.dev.blogdemo.models.dto.AuthResponse;
 import abdulgazizov.dev.blogdemo.services.impl.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
