@@ -1,5 +1,6 @@
 package abdulgazizov.dev.blogdemo.services.impl;
 
+import abdulgazizov.dev.blogdemo.exceptions.UserNotFoundException;
 import abdulgazizov.dev.blogdemo.models.entities.UserEntity;
 import abdulgazizov.dev.blogdemo.exceptions.BadRequestException;
 import abdulgazizov.dev.blogdemo.models.user.Role;
@@ -23,13 +24,13 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("User with username: " + username + " already exists");
         }
 
-        final UserEntity entity = UserEntity.builder()
+        final UserEntity user = UserEntity.builder()
                 .username(username)
                 .password(password)
                 .role(Role.ROLE_USER)
                 .build();
 
-        UserEntity savedUser = userRepository.saveAndFlush(entity);
+        UserEntity savedUser = userRepository.saveAndFlush(user);
         log.info("User created successfully with username: {}", username);
         return savedUser;
     }
@@ -38,14 +39,14 @@ public class UserServiceImpl implements UserService {
         log.info("Fetching user by username: {}", username);
         return userRepository
                 .findByUsername(username)
-                .orElseThrow(() -> new BadRequestException("User with username: " + username + " does not exist"));
+                .orElseThrow(() -> new UserNotFoundException("User with username: " + username + " does not exist"));
     }
 
     public UserEntity getById(Long id) {
         log.info("Fetching user by id: {}", id);
         return userRepository
                 .findById(id)
-                .orElseThrow(() -> new BadRequestException("User with id: " + id + " does not exist"));
+                .orElseThrow(() -> new UserNotFoundException("User with id: " + id + " does not exist"));
     }
 
     public UserEntity getCurrent() {
