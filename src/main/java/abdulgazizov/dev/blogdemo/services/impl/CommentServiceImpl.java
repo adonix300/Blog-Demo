@@ -1,16 +1,17 @@
 package abdulgazizov.dev.blogdemo.services.impl;
 
+import abdulgazizov.dev.blogdemo.mappers.CommentMapper;
 import abdulgazizov.dev.blogdemo.models.dto.CommentDto;
 import abdulgazizov.dev.blogdemo.models.entities.CommentEntity;
 import abdulgazizov.dev.blogdemo.models.entities.PostEntity;
 import abdulgazizov.dev.blogdemo.models.entities.UserEntity;
-import abdulgazizov.dev.blogdemo.mappers.CommentMapper;
 import abdulgazizov.dev.blogdemo.repositories.CommentRepository;
 import abdulgazizov.dev.blogdemo.services.CommentService;
 import abdulgazizov.dev.blogdemo.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentMapper commentMapper;
     private final PostServiceImpl postService;
 
+    @Transactional
     public CommentEntity create(Long postId, CommentDto commentDto) {
         log.info("Creating comment for post: {}", postId);
         UserEntity user = userService.getCurrent();

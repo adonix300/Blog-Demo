@@ -11,10 +11,9 @@ import abdulgazizov.dev.blogdemo.services.PostService;
 import abdulgazizov.dev.blogdemo.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class PostServiceImpl implements PostService {
     private final PostMapper postMapper;
     private final UserService userService;
 
-    @CacheEvict(value = "posts", allEntries = true)
+    @Transactional
     public PostEntity create(PostDto postDto) {
         log.info("Creating post");
         UserEntity user = userService.getCurrent();
@@ -39,19 +38,17 @@ public class PostServiceImpl implements PostService {
         return savedPost;
     }
 
-    @Cacheable("posts")
     public List<PostEntity> getAll() {
         log.info("Fetching all posts");
         return postRepository.findAll();
     }
 
-    @Cacheable(value = "posts", key = "#id")
     public PostEntity getById(Long id) {
         log.info("Fetching post by id: {}", id);
         return postRepository.findById(id).orElseThrow(() -> new PostNotFoundException("Post with id " + id + " not found"));
     }
 
-    @CacheEvict(value = "posts", allEntries = true)
+    @Transactional
     public PostEntity update(Long id, PostDto postDto) {
         log.info("Updating post with id: {}", id);
         PostEntity postEntity = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException("Post with id " + id + " not found"));
@@ -66,7 +63,7 @@ public class PostServiceImpl implements PostService {
         return updatedPost;
     }
 
-    @CacheEvict(value = "posts", allEntries = true)
+    @Transactional
     public void delete(Long id) {
         log.info("Deleting post with id: {}", id);
         if (postRepository.existsById(id)) {

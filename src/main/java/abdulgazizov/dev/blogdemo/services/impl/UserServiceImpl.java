@@ -1,8 +1,8 @@
 package abdulgazizov.dev.blogdemo.services.impl;
 
+import abdulgazizov.dev.blogdemo.exceptions.BadRequestException;
 import abdulgazizov.dev.blogdemo.exceptions.UserNotFoundException;
 import abdulgazizov.dev.blogdemo.models.entities.UserEntity;
-import abdulgazizov.dev.blogdemo.exceptions.BadRequestException;
 import abdulgazizov.dev.blogdemo.models.user.Role;
 import abdulgazizov.dev.blogdemo.repositories.UserRepository;
 import abdulgazizov.dev.blogdemo.services.UserService;
@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -18,6 +19,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    @Transactional
     public UserEntity create(String username, String password) {
         log.info("Creating user with username: {}", username);
         if (userRepository.existsByUsername(username)) {
