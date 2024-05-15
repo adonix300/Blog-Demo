@@ -19,7 +19,9 @@ public class PostEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 150)
     private String title;
+    @Column(nullable = false, length = 500)
     private String content;
 
     @Builder.Default
