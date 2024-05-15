@@ -3,6 +3,7 @@ package abdulgazizov.dev.blogdemo.controllers;
 import abdulgazizov.dev.blogdemo.models.dto.UserDto;
 import abdulgazizov.dev.blogdemo.mappers.UserMapper;
 import abdulgazizov.dev.blogdemo.services.UserService;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,7 @@ public class UserController {
     }
 
     @GetMapping("profile/{id}")
-    public ResponseEntity<UserDto> profile(@PathVariable Long id) {
+    public ResponseEntity<UserDto> profile(@PathVariable @NotNull Long id) {
         UserDto userDto = userMapper.toDto(userService.getById(id));
         return ResponseEntity.ok(userDto);
     }

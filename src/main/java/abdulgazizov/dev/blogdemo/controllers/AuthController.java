@@ -3,6 +3,7 @@ package abdulgazizov.dev.blogdemo.controllers;
 import abdulgazizov.dev.blogdemo.models.dto.AuthRequest;
 import abdulgazizov.dev.blogdemo.models.dto.AuthResponse;
 import abdulgazizov.dev.blogdemo.services.impl.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +19,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("signup")
-    public ResponseEntity<AuthResponse> signup(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<AuthResponse> signup(@RequestBody @Valid AuthRequest authRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.signUp(authRequest));
     }
 
     @PostMapping("signin")
-    public ResponseEntity<AuthResponse> signin(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<AuthResponse> signin(@RequestBody @Valid AuthRequest authRequest) {
         return ResponseEntity.ok(authService.signIn(authRequest));
     }
 }

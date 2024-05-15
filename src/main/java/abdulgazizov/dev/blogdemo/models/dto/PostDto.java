@@ -1,6 +1,7 @@
 package abdulgazizov.dev.blogdemo.models.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,8 +17,11 @@ import java.util.List;
 @NoArgsConstructor
 public class PostDto {
     private Long id;
+    @NotBlank
     private String title;
+    @NotBlank
     private String content;
+
     private UserDto author;
     @Builder.Default
     @JsonProperty("created_at")
