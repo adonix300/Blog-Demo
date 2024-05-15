@@ -7,6 +7,7 @@ import abdulgazizov.dev.blogdemo.models.entities.PostEntity;
 import abdulgazizov.dev.blogdemo.models.entities.UserEntity;
 import abdulgazizov.dev.blogdemo.repositories.CommentRepository;
 import abdulgazizov.dev.blogdemo.services.CommentService;
+import abdulgazizov.dev.blogdemo.services.PostService;
 import abdulgazizov.dev.blogdemo.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +24,12 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final UserService userService;
     private final CommentMapper commentMapper;
-    private final PostServiceImpl postService;
+    private final PostService postService;
 
     @Transactional
     public CommentEntity create(Long postId, CommentDto commentDto) {
         log.info("Creating comment for post: {}", postId);
+
         UserEntity user = userService.getCurrent();
         PostEntity post = postService.getById(postId);
         CommentEntity commentEntity = commentMapper.toEntity(commentDto);
@@ -36,6 +38,8 @@ public class CommentServiceImpl implements CommentService {
         CommentEntity savedComment = commentRepository.saveAndFlush(commentEntity);
         log.info("Comment created successfully for post: {}", postId);
         return savedComment;
+
+
     }
 
     public List<CommentEntity> getCommentsByPostId(Long postId) {

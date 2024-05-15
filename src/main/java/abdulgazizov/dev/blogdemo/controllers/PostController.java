@@ -2,7 +2,7 @@ package abdulgazizov.dev.blogdemo.controllers;
 
 import abdulgazizov.dev.blogdemo.mappers.PostMapper;
 import abdulgazizov.dev.blogdemo.models.dto.PostDto;
-import abdulgazizov.dev.blogdemo.services.impl.PostServiceImpl;
+import abdulgazizov.dev.blogdemo.services.PostService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("posts")
 public class PostController {
-    private final PostServiceImpl postService;
+    private final PostService postService;
     private final PostMapper postMapper;
 
     @PostMapping()
