@@ -7,12 +7,15 @@ import abdulgazizov.dev.blogdemo.services.CustomUserDetailsService;
 import abdulgazizov.dev.blogdemo.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @Service
@@ -38,12 +41,17 @@ public class AuthService {
     }
 
     public AuthResponse signIn(AuthRequest authRequest) {
-        log.info("Attempting to sign in user: {}", authRequest.getUsername());
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        authRequest.getUsername(),
-                        authRequest.getPassword()));
-        log.info("User authenticated successfully: {}", authRequest.getUsername());
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            authRequest.getUsername(),
+                            authRequest.getPassword()));
+            log.info("User authenticated successfully: {}", authRequest.getUsername());
+        } catch (AuthenticationException e) {
+            log.warn("Authentication failed for user: {}", authRequest.getUsername());
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password");
+        }
+
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
         String jwtToken = jwtService.generateToken(userDetails);
