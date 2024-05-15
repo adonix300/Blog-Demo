@@ -4,6 +4,7 @@ import abdulgazizov.dev.blogdemo.models.dto.AuthRequest;
 import abdulgazizov.dev.blogdemo.models.dto.AuthResponse;
 import abdulgazizov.dev.blogdemo.services.impl.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +19,7 @@ public class AuthController {
 
     @PostMapping("signup")
     public ResponseEntity<AuthResponse> signup(@RequestBody AuthRequest authRequest) {
-        return ResponseEntity.ok(authService.signUp(authRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.signUp(authRequest));
     }
 
     @PostMapping("signin")

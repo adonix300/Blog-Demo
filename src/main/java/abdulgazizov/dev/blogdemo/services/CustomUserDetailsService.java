@@ -1,7 +1,7 @@
 package abdulgazizov.dev.blogdemo.services;
 
+import abdulgazizov.dev.blogdemo.exceptions.UserNotFoundException;
 import abdulgazizov.dev.blogdemo.models.entities.UserEntity;
-import abdulgazizov.dev.blogdemo.exceptions.BadRequestException;
 import abdulgazizov.dev.blogdemo.models.user.CustomUserDetails;
 import abdulgazizov.dev.blogdemo.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity entity = userRepository
                 .findByUsername(username)
-                .orElseThrow(() -> new BadRequestException("User with username: " + username + " does not exist"));
+                .orElseThrow(() -> new UserNotFoundException("User with username: " + username + " does not exist"));
 
         return new CustomUserDetails(entity);
     }

@@ -4,6 +4,7 @@ import abdulgazizov.dev.blogdemo.models.dto.CommentDto;
 import abdulgazizov.dev.blogdemo.mappers.CommentMapper;
 import abdulgazizov.dev.blogdemo.services.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,6 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<CommentDto> createComment(@PathVariable Long postId, @RequestBody CommentDto commentDto) {
         CommentDto comment = commentMapper.toDto(commentService.create(postId, commentDto));
-        return ResponseEntity.ok(comment);
+        return ResponseEntity.status(HttpStatus.CREATED).body(comment);
     }
 }

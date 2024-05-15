@@ -4,6 +4,7 @@ import abdulgazizov.dev.blogdemo.models.dto.PostDto;
 import abdulgazizov.dev.blogdemo.mappers.PostMapper;
 import abdulgazizov.dev.blogdemo.services.impl.PostServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class PostController {
     @PostMapping()
     public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto) {
         PostDto savedPost = postMapper.toDto(postService.create(postDto));
-        return ResponseEntity.ok(savedPost);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedPost);
     }
 
     @GetMapping
