@@ -1,10 +1,10 @@
 package abdulgazizov.dev.blogdemo.controllers;
 
 import abdulgazizov.dev.blogdemo.TestContainerConfig;
-import abdulgazizov.dev.blogdemo.exceptions.UserNotFoundException;
 import abdulgazizov.dev.blogdemo.models.dto.PostDto;
 import abdulgazizov.dev.blogdemo.models.entities.UserEntity;
 import abdulgazizov.dev.blogdemo.models.user.CustomUserDetails;
+import abdulgazizov.dev.blogdemo.models.user.Role;
 import abdulgazizov.dev.blogdemo.repositories.UserRepository;
 import abdulgazizov.dev.blogdemo.secutiry.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,7 +21,6 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,6 +36,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
 class PostControllerIT {
+    private final static String AUTHORIZATION = "Authorization";
+    private final static String BEARER = "Bearer ";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -52,26 +54,24 @@ class PostControllerIT {
     @Autowired
     private JwtService jwtService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     private PostDto postDto;
 
     private String token;
 
     private String signupUser(String username, String password) {
-        password = passwordEncoder.encode(password);
-        String sql = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, username, password, "ROLE_USER");
 
-        UserEntity userEntity = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("wrong " + username));
+        UserEntity userEntity = UserEntity.builder()
+                .username(username)
+                .password(password)
+                .role(Role.ROLE_USER)
+                .build();
+
+        userEntity = userRepository.saveAndFlush(userEntity);
 
         UserDetails userDetails = new CustomUserDetails(userEntity);
 
         return jwtService.generateToken(userDetails);
-//        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-//        SecurityContextHolder.getContext().setAuthentication(authRequest);
     }
 
     @BeforeEach
@@ -99,7 +99,7 @@ class PostControllerIT {
     @Test
     public void createPost_testSuccess() throws Exception {
         mockMvc.perform(post("/posts")
-                        .header("Authorization", "Bearer " + token)
+                        .header(AUTHORIZATION, BEARER + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postDto)))
                 .andExpect(status().isCreated())
@@ -123,7 +123,7 @@ class PostControllerIT {
                 .build();
 
         mockMvc.perform(post("/posts")
-                        .header("Authorization", "Bearer " + token)
+                        .header(AUTHORIZATION, BEARER + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postDto)))
                 .andExpect(status().isBadRequest());
@@ -132,7 +132,7 @@ class PostControllerIT {
     @Test
     public void getAllPosts_testSuccess() throws Exception {
         mockMvc.perform(get("/posts")
-                        .header("Authorization", "Bearer " + token)
+                        .header(AUTHORIZATION, BEARER + token)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
@@ -148,7 +148,7 @@ class PostControllerIT {
     @Test
     public void getPostById_testSuccess() throws Exception {
         String postResponse = mockMvc.perform(post("/posts")
-                        .header("Authorization", "Bearer " + token)
+                        .header(AUTHORIZATION, BEARER + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postDto)))
                 .andExpect(status().isCreated())
@@ -157,8 +157,8 @@ class PostControllerIT {
         Long postId = JsonPath.parse(postResponse).read("$.id", Long.class);
 
         mockMvc.perform(get("/posts/{id}", postId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + token))
+                        .header(AUTHORIZATION, BEARER + token)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", containsString("Test Title")))
                 .andExpect(jsonPath("$.content", containsString("Test Content")));
@@ -167,7 +167,7 @@ class PostControllerIT {
     @Test
     public void getPostById_testNotFound() throws Exception {
         mockMvc.perform(get("/posts/{id}", 999L)
-                        .header("Authorization", "Bearer " + token)
+                        .header(AUTHORIZATION, BEARER + token)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -175,7 +175,7 @@ class PostControllerIT {
     @Test
     public void updatePost_testForbidden() throws Exception {
         String postResponse = mockMvc.perform(post("/posts")
-                        .header("Authorization", "Bearer " + token)
+                        .header(AUTHORIZATION, BEARER + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postDto)))
                 .andExpect(status().isCreated())
@@ -191,7 +191,7 @@ class PostControllerIT {
                 .build();
 
         mockMvc.perform(put("/posts/{id}", postId)
-                        .header("Authorization", "Bearer " + token2)
+                        .header(AUTHORIZATION, BEARER + token2)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedPostDto)))
                 .andExpect(status().isForbidden());
@@ -200,7 +200,7 @@ class PostControllerIT {
     @Test
     public void updatePost_testSuccess() throws Exception {
         String postResponse = mockMvc.perform(post("/posts")
-                        .header("Authorization", "Bearer " + token)
+                        .header(AUTHORIZATION, BEARER + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postDto)))
                 .andExpect(status().isCreated())
@@ -214,7 +214,7 @@ class PostControllerIT {
                 .build();
 
         mockMvc.perform(put("/posts/{id}", postId)
-                        .header("Authorization", "Bearer " + token)
+                        .header(AUTHORIZATION, BEARER + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedPostDto)))
                 .andExpect(status().isOk())
@@ -230,7 +230,7 @@ class PostControllerIT {
                 .build();
 
         mockMvc.perform(put("/posts/{id}", 999L)
-                        .header("Authorization", "Bearer " + token)
+                        .header(AUTHORIZATION, BEARER + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedPostDto)))
                 .andExpect(status().isNotFound());
@@ -239,7 +239,7 @@ class PostControllerIT {
     @Test
     public void deletePost_testSuccess() throws Exception {
         String postResponse = mockMvc.perform(post("/posts")
-                        .header("Authorization", "Bearer " + token)
+                        .header(AUTHORIZATION, BEARER + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postDto)))
                 .andExpect(status().isCreated())
@@ -248,7 +248,7 @@ class PostControllerIT {
         Long postId = JsonPath.parse(postResponse).read("$.id", Long.class);
 
         mockMvc.perform(delete("/posts/{id}", postId)
-                        .header("Authorization", "Bearer " + token)
+                        .header(AUTHORIZATION, BEARER + token)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Successfully deleted post"));
@@ -267,7 +267,7 @@ class PostControllerIT {
                 .build();
 
         String postResponse = mockMvc.perform(post("/posts")
-                        .header("Authorization", "Bearer " + token)
+                        .header(AUTHORIZATION, BEARER + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postDto)))
                 .andExpect(status().isCreated())
@@ -278,7 +278,7 @@ class PostControllerIT {
         SecurityContextHolder.clearContext();
         String token2 = signupUser("new_user", "new_password");
         mockMvc.perform(delete("/posts/{id}", postId)
-                        .header("Authorization", "Bearer " + token2)
+                        .header(AUTHORIZATION, BEARER + token2)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
@@ -286,7 +286,7 @@ class PostControllerIT {
     @Test
     public void deletePost_testNotFound() throws Exception {
         mockMvc.perform(delete("/posts/{id}", 999L)
-                        .header("Authorization", "Bearer " + token)
+                        .header(AUTHORIZATION, BEARER + token)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
