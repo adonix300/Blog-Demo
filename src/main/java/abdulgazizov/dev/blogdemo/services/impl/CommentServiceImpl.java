@@ -1,5 +1,8 @@
 package abdulgazizov.dev.blogdemo.services.impl;
 
+import abdulgazizov.dev.blogdemo.exceptions.BadRequestException;
+import abdulgazizov.dev.blogdemo.exceptions.CommentNotFoundException;
+import abdulgazizov.dev.blogdemo.exceptions.ForbiddenException;
 import abdulgazizov.dev.blogdemo.mappers.CommentMapper;
 import abdulgazizov.dev.blogdemo.models.dto.CommentDto;
 import abdulgazizov.dev.blogdemo.models.entities.CommentEntity;
@@ -45,5 +48,22 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentEntity> getCommentsByPostId(Long postId) {
         log.info("Fetching comments for post: {}", postId);
         return commentRepository.findAllByPost_Id(postId).orElse(new ArrayList<CommentEntity>());
+    }
+
+    @Transactional
+    public void delete(Long postId, Long commentId) {
+        log.info("Deleting comment for post: {}", postId);
+        CommentEntity comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("Comment not found"));
+        if (comment.getUser().getId().equals(userService.getCurrent().getId())) {
+            if (comment.getPost().getId().equals(postId)) {
+                commentRepository.delete(comment);
+                log.info("Comment deleted successfully for post: {}", postId);
+            }
+            else {
+                throw new BadRequestException("Bad request");
+            }
+        } else {
+            throw new ForbiddenException("You are not allowed to delete this comment");
+        }
     }
 }

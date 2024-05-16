@@ -9,4 +9,6 @@ public interface CommentService {
     CommentEntity create(Long postId, CommentDto commentDto);
 
     List<CommentEntity> getCommentsByPostId(Long postId);
+
+    void delete(Long postId, Long commentId);
 }
