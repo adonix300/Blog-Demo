@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: dbc:tc:postgresql:16:///blog
+    username: postgres
+    password: postgres
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
