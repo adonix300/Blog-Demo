@@ -4,13 +4,13 @@ services:
   app:
     image: blogapp:1.0
     expose:
-      - "8081"
+      - "8080"
     ports:
-      - "8081:8081"
+      - "8080:8080"
     environment:
       - DB_USER=postgres
       - DB_PASSWORD=postgres
-      - DB_URL=postgresql://db:5432/blog
+      - DB_URL=jdbc:postgresql://db:5432/blog
     depends_on:
       - db
   db:
