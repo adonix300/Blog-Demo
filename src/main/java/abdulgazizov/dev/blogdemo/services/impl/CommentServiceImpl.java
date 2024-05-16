@@ -31,29 +31,44 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     public CommentEntity create(Long postId, CommentDto commentDto) {
+        if (commentDto == null) {
+            throw new BadRequestException("Comment cannot be null");
+        }
+
         log.info("Creating comment for post: {}", postId);
 
         UserEntity user = userService.getCurrent();
         PostEntity post = postService.getById(postId);
+
         CommentEntity commentEntity = commentMapper.toEntity(commentDto);
         commentEntity.setUser(user);
         commentEntity.setPost(post);
+
         CommentEntity savedComment = commentRepository.saveAndFlush(commentEntity);
+
         log.info("Comment created successfully for post: {}", postId);
         return savedComment;
-
-
     }
 
     public List<CommentEntity> getCommentsByPostId(Long postId) {
+        if (postId == null) {
+            throw new BadRequestException("Post ID cannot be null");
+        }
+
         log.info("Fetching comments for post: {}", postId);
         return commentRepository.findAllByPost_Id(postId).orElse(new ArrayList<CommentEntity>());
     }
 
     @Transactional
     public void delete(Long postId, Long commentId) {
+        if (commentId == null) {
+            throw new BadRequestException("Comment ID cannot be null");
+        }
+
         log.info("Deleting comment for post: {}", postId);
+
         CommentEntity comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("Comment not found"));
+
         if (comment.getUser().getId().equals(userService.getCurrent().getId())) {
             if (comment.getPost().getId().equals(postId)) {
                 commentRepository.delete(comment);

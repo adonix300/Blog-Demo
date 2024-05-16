@@ -1,5 +1,6 @@
 package abdulgazizov.dev.blogdemo.services.impl;
 
+import abdulgazizov.dev.blogdemo.exceptions.BadRequestException;
 import abdulgazizov.dev.blogdemo.exceptions.ForbiddenException;
 import abdulgazizov.dev.blogdemo.exceptions.PostNotFoundException;
 import abdulgazizov.dev.blogdemo.mappers.PostMapper;
@@ -27,6 +28,7 @@ public class PostServiceImpl implements PostService {
 
     @Transactional
     public PostEntity create(PostDto postDto) {
+
         log.info("Creating post");
         UserEntity user = userService.getCurrent();
         PostEntity postEntity = postMapper.toEntity(postDto);
@@ -50,6 +52,14 @@ public class PostServiceImpl implements PostService {
 
     @Transactional
     public PostEntity update(Long id, PostDto postDto) {
+        if (id == null) {
+            throw new BadRequestException("Post ID cannot be null");
+        }
+
+        if (postDto == null) {
+            throw new BadRequestException("Post cannot be null");
+        }
+
         log.info("Updating post with id: {}", id);
         PostEntity postEntity = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException("Post with id " + id + " not found"));
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -67,12 +77,16 @@ public class PostServiceImpl implements PostService {
 
     @Transactional
     public void delete(Long id) {
+        if (id == null) {
+            throw new BadRequestException("Post ID cannot be null");
+        }
+
         log.info("Deleting post with id: {}", id);
         PostEntity postEntity = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException("Post with id " + id + " not found"));
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if (!postEntity.getUser().getUsername().equals(username)) {
-            throw new ForbiddenException("User " + username + " have not enough rights to update this post");
+            throw new ForbiddenException("User " + username + " have not enough rights to delete this post");
         }
         postRepository.deleteById(id);
         log.info("Post deleted successfully with id: {}", id);
