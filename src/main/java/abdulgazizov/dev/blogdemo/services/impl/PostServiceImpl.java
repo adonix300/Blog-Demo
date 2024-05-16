@@ -1,6 +1,6 @@
 package abdulgazizov.dev.blogdemo.services.impl;
 
-import abdulgazizov.dev.blogdemo.exceptions.BadRequestException;
+import abdulgazizov.dev.blogdemo.exceptions.ForbiddenException;
 import abdulgazizov.dev.blogdemo.exceptions.PostNotFoundException;
 import abdulgazizov.dev.blogdemo.mappers.PostMapper;
 import abdulgazizov.dev.blogdemo.models.dto.PostDto;
@@ -53,9 +53,11 @@ public class PostServiceImpl implements PostService {
         log.info("Updating post with id: {}", id);
         PostEntity postEntity = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException("Post with id " + id + " not found"));
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
         if (!postEntity.getUser().getUsername().equals(username)) {
-            throw new BadRequestException("User " + username + " not authorized to update this post");
+            throw new ForbiddenException("User " + username + " have not enough rights to update this post");
         }
+
         postEntity.setTitle(postDto.getTitle());
         postEntity.setContent(postDto.getContent());
         PostEntity updatedPost = postRepository.saveAndFlush(postEntity);
@@ -66,11 +68,13 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void delete(Long id) {
         log.info("Deleting post with id: {}", id);
-        if (postRepository.existsById(id)) {
-            postRepository.deleteById(id);
-            log.info("Post deleted successfully with id: {}", id);
-        } else {
-            throw new PostNotFoundException("Post with id " + id + " not found");
+        PostEntity postEntity = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException("Post with id " + id + " not found"));
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (!postEntity.getUser().getUsername().equals(username)) {
+            throw new ForbiddenException("User " + username + " have not enough rights to update this post");
         }
+        postRepository.deleteById(id);
+        log.info("Post deleted successfully with id: {}", id);
     }
 }
