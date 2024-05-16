@@ -2,9 +2,9 @@ spring:
   application:
     name: BlogDemo
   datasource:
-    password: postgres
-    username: postgres
-    url: jdbc:postgresql://localhost:5432/blog
+    password: ${DB_PASSWORD}
+    username: ${DB_USER}
+    url: ${DB_URL}
   jpa:
     hibernate:
       ddl-auto: none
