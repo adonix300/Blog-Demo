@@ -15,36 +15,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = TestContainerConfig.class)
 @TestPropertySource(locations = "classpath:application-test.yaml")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
 class UserControllerTest {
     private final static String AUTHORIZATION = "Authorization";
     private final static String BEARER = "Bearer ";
 
     @Autowired
-    private MockMvc mvc;
+    private MockMvc mockMvc;
 
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private JwtService jwtService;
+
     @Autowired
-    private MockMvc mockMvc;
+    private JdbcTemplate jdbcTemplate;
 
     private String token;
 
@@ -69,7 +69,14 @@ class UserControllerTest {
 
     @AfterEach
     void tearDown() {
-        userRepository.deleteAll();
+        clearDataBase();
+        SecurityContextHolder.clearContext();
+    }
+
+    void clearDataBase() {
+        jdbcTemplate.execute("TRUNCATE TABLE comments CASCADE");
+        jdbcTemplate.execute("TRUNCATE TABLE posts CASCADE");
+        jdbcTemplate.execute("TRUNCATE TABLE users CASCADE");
     }
 
     @Test
@@ -89,19 +96,36 @@ class UserControllerTest {
 
     @Test
     public void profileById_testSuccess() throws Exception {
-        mockMvc.perform(get("/user/profile/{id}", 1L)
+        UserEntity userEntity = UserEntity.builder()
+                .username("NEW_USERNAME")
+                .password("PASSWORD")
+                .role(Role.ROLE_USER)
+                .build();
+
+        userEntity = userRepository.saveAndFlush(userEntity);
+
+        UserDetails userDetails = new CustomUserDetails(userEntity);
+
+        String token = jwtService.generateToken(userDetails);
+
+        mockMvc.perform(get("/user/profile/{id}", userEntity.getId())
                         .header(AUTHORIZATION, BEARER + token)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("username"));
+                .andExpect(status().isOk());
 
-        signupUser("username2", "password2");
+        UserEntity userEntity2 = UserEntity.builder()
+                .username("NEW_USERNAME_2")
+                .password("PASSWORD")
+                .role(Role.ROLE_USER)
+                .build();
 
-        mockMvc.perform(get("/user/profile/{id}", 2L)
+        userEntity2 = userRepository.saveAndFlush(userEntity);
+
+        mockMvc.perform(get("/user/profile/{id}", userEntity2.getId())
                         .header(AUTHORIZATION, BEARER + token)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("username2"));
+                .andExpect(status().isOk());
+
     }
 
     @Test

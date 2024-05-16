@@ -33,7 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = TestContainerConfig.class)
 @TestPropertySource(locations = "classpath:application-test.yaml")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
 class PostControllerIT {
     private final static String AUTHORIZATION = "Authorization";
